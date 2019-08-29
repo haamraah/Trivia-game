@@ -20,7 +20,7 @@ Play here: https://haamraah.github.io/Trivia-game/
 ### Screen Shots
 
 ##### wire Frame
-![screen shot](assets\images\readMeImg.png)
+![screen shot](assets\\images\\readMeImg.png)
 
 
 
