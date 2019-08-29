@@ -1,0 +1,12 @@
+#main{
+    height: 300px;
+}
+#header{
+    height: 100px;
+}
+.img{
+    width: 200px;
+    height: auto;
+   max-height: 200px;
+}
+

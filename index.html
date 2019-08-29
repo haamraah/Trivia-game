@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Trivia Game</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div id="header" class="row  ">
+            <div id="correctAnswers" class="col-4 bg-dark py-3 ">
+              
+            </div>
+            <div class="col-4 bg-dark d-flex justify-content-center text-light py-3 ">
+                <h1 id="timer"></h1>
+            </div>
+            <div id="wrongAnswers" class="col-4 bg-dark  py-3 ">
+                
+            </div>
+
+
+        </div>
+        <div id="main" class="row">
+            <div class="col">
+                <div  class="row  h-75 py-1 ">
+                    <div id="question" class="col  bg-dark d-flex justify-content-center text-light">
+                        
+                    </div>
+                </div>
+                <div  class="row  h-25 py-1" >
+                    <div id="options" class="col  bg-dark d-flex justify-content-center text-light">
+                        Options
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="footer" class="row">
+            <div id="correctAnswersCounter" class="col-6 bg-dark p-1 text-light d-flex justify-content-center ">
+                correct Answers :
+            </div>
+
+            <div id="wrongAnswersCounter" class="col-6 bg-dark p-1  text-light d-flex justify-content-center">
+                Wrong Answers :
+            </div>
+
+        </div>
+
+
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="assets/javascript/app.js"></script>
+</body>
+
+</html>
