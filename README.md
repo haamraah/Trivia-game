@@ -17,6 +17,12 @@ Do you always know where you are when it comes to geography trivia? If you think
 ## Getting Started
 Play here: https://haamraah.github.io/Trivia-game/
 
+### Screen Shots
+
+##### wire Frame
+![screen shot](assets\images\readMeImg.png)
+
+
 
 ## Technologies used
 - Bootstrap
