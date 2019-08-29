@@ -1,3 +1,4 @@
+//main object contains question a related image url correct answer and 4 options for each question
 
 var questions = [
     {
@@ -119,12 +120,17 @@ var questions = [
         ]
     }
 ]
-var counter = -1, correctAnswers = 0, wrongAnswers = 0, time = 5, interval, clockRunning = false,overalTime=0;
 
+
+// global variables
+var counter = -1, correctAnswers = 0, wrongAnswers = 0, time = 5, interval, clockRunning = false,overalTime=0;
+// functions 
+
+// checkAnswer gets parameter , first one is the button lable and 2nd is the correct answer from our object
 function checkAnswer(userChose, correctAnswer) {
-    console.log(userChose === correctAnswer)
+
     if (userChose === correctAnswer) {
-        console.log("correct");
+        // if correct answer , adds number of correct answers and a green smily face to the html 
         correctAnswers++;
         $("#correctAnswersCounter").text("Correct Answers : " + correctAnswers);
 
@@ -133,7 +139,7 @@ function checkAnswer(userChose, correctAnswer) {
         $("#correctAnswers").append(newSpan);
     }
     else {
-        console.log("wrong");
+        // if NOT correct answer , adds number of NOT correct answers and a red sad face to the html 
         wrongAnswers++;
         $("#wrongAnswersCounter").text("wrong Answers : " + wrongAnswers);
 
@@ -143,7 +149,13 @@ function checkAnswer(userChose, correctAnswer) {
     }
 
 }
+
+//  empty the containers and shows new question an image and generats 4 options , resets the timer
 function nextQuestion() {
+    $("p").remove();
+    $(".img").remove();
+
+    console.log("next empty");
     if (clockRunning) {
         clearInterval(interval);
 
@@ -154,14 +166,18 @@ function nextQuestion() {
         interval = setInterval(count, 1000);
         clockRunning = true;
     }
+    
 
     counter++
     if (counter < questions.length) {
-        $("#question").text(questions[counter].question);
-        var newImg = $("<img>").addClass("img");
+
+        // show question and image in questions container
+        $("#question").append($("<p>").text(questions[counter].question));
+        var newImg = $("<img>").addClass("img p-1 m-2");
         newImg.attr("src",questions[counter].imgUrl);
         $("#question").append(newImg);
 
+        // generats 4 options
         $("#options").empty();
 
         for (i = 0; i < 4; i++) {
@@ -171,27 +187,36 @@ function nextQuestion() {
             $("#options").append(newButton)
         }
 
+        // on options click we check the answer and recall new question
         $(".btn").click(function () {
-            var userAnswer =
+            // var userAnswer =
                 checkAnswer($(this).text(), questions[counter].correct_answer);
+               
             nextQuestion();
         })
 
     }
+
+
+    // if there is no more question left we show overall result
     else {
-        console.log("else")
         showResult();
     }
 }
+
+
+// shows overall result , resets all variables and html , stop the timer
 function showResult() {
-    $("#question").text("");
-    $("#question").append("<h1>your result is : " + (correctAnswers * 10) + "%  And  &nbsp</h1>");
-    $("#question").append("<br><h1>your overall time was: " + (timeConverter(overalTime)) + "</h1>");
+    $("#questions").empty();
+
+    $("#question").append("<h1 id=\"result\">your result is : " + (correctAnswers * 10) + "%  And  your overall time was: " + (timeConverter(overalTime)) +"</h1>");
+     
 
     $("#options").empty();
     counter = -1;
     correctAnswers = 0;
     wrongAnswers = 0;
+    overalTime=0;
     $("#correctAnswersCounter").text("Correct Answers : ");
     $("#correctAnswers").empty();
     $("#wrongAnswersCounter").text("wrong Answers : ");
@@ -211,14 +236,20 @@ function showResult() {
     $("#options").append(newButton)
 
     $("#start").click(function () {
+        $("#result").remove();
         nextQuestion();
     })
 }
+
+// starts the app , creat start button
 function start() {
     $("#options").empty();
     $("#questions").empty();
-
-    $("#question").text("Do you always know where you are when it comes to geography trivia?\\nIf you think you do, then test your knowledge now with these free geography trivia questions and answers...?");
+    console.log("start empty");
+    $("#question").append($("<p>").text("Do you always know where you are when it comes to geography trivia? \t If you think you do, then test your knowledge now with these free geography trivia questions and answers...?")) ;
+    var newImg = $("<img>").addClass("img p-1 m-2");
+    newImg.attr("src","assets\\images\\ng.jpg");
+    $("#question").append(newImg);
     $("#options").text("");
     var newButton = $("<button>").text("Start");
     newButton.attr("id", "start");
@@ -230,38 +261,49 @@ function start() {
     })
 
 }
-start();
 
 
 
+// timer function ,count down , and keeps the overal time spent
 function count() {
 
-    // DONE: increment time by 1, remember we cant use "this" here.
+    
     time--;
 overalTime++;
-    // DONE: Get the current time, pass that into the timeConverter function,
-    //       and save the result in a variable.
+    
     var converted = timeConverter(time);
 
+    // if we ran out of time 
     if (time == 0) {
-        console.log("times up");
-        checkAnswer(1, 2);
+        
+        //  we compare apple to oranges , result is a wrong answer
+        checkAnswer("apple", "oranges");
         $("#options").empty();
-        $("#questions").empty();
+        
         if (clockRunning) {
             clearInterval(interval);
     
         }
         clockRunning = false;
-        time = 5
+        time = 5;
 
-        $("#question").text("times up \\n the correct answer was : "+questions[counter].correct_answer);
+        $("p").remove();
+        $(".img").remove();
+
+        // let user know that times up and correct answer for 2 seconds
+        var newP =$("<p>").text("times up!! the correct answer was : "+questions[counter].correct_answer);
+        newP.css("color", "red");
+        $("#question").prepend(newP);
+
+        
         setTimeout(function(){ nextQuestion()}, 2000);
 
     }
-    // DONE: Use the variable we just created to show the converted time in the "display" div.
+    // show timer on screen
     $("#timer").text(converted);
 }
+
+// convert timer to 00:00 format
 function timeConverter(t) {
 
     var minutes = Math.floor(t / 60);
@@ -280,3 +322,8 @@ function timeConverter(t) {
 
     return minutes + ":" + seconds;
 }
+
+
+$(document).ready(function(){
+    start();
+  });

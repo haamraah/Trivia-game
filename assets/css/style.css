@@ -9,4 +9,12 @@
     height: auto;
    max-height: 200px;
 }
+body{
+    font-size: 20px;
+    background-color: gray;
 
+}
+p{
+    
+    max-width: 600px;
+}
