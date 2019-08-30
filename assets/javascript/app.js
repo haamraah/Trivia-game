@@ -123,7 +123,7 @@ var questions = [
 
 
 // global variables
-var counter = -1, correctAnswers = 0, wrongAnswers = 0, time = 5, interval, clockRunning = false,overalTime=0;
+var counter = -1, correctAnswers = 0, wrongAnswers = 0, time = 5, interval, clockRunning = false, overalTime = 0;
 // functions 
 
 // checkAnswer gets parameter , first one is the button lable and 2nd is the correct answer from our object
@@ -134,18 +134,22 @@ function checkAnswer(userChose, correctAnswer) {
         correctAnswers++;
         $("#correctAnswersCounter").text("Correct Answers : " + correctAnswers);
 
-        var newSpan = $("<span>").addClass("m-1 bg-success");
+        var newSpan = $("<span>").addClass("m-1 bg-success").css("opacity", "0").animate({ opacity: '1' }, "slow");
         newSpan.text("☺");
         $("#correctAnswers").append(newSpan);
+        return true;
+
     }
     else {
         // if NOT correct answer , adds number of NOT correct answers and a red sad face to the html 
         wrongAnswers++;
         $("#wrongAnswersCounter").text("wrong Answers : " + wrongAnswers);
 
-        var newSpan = $("<span>").addClass("m-1 bg-warning");
+        var newSpan = $("<span>").addClass("m-1 bg-warning").css("opacity", "0").animate({ opacity: '1' }, "slow");
         newSpan.text("☹");
         $("#wrongAnswers").append(newSpan);
+        return false;
+
     }
 
 }
@@ -166,33 +170,35 @@ function nextQuestion() {
         interval = setInterval(count, 1000);
         clockRunning = true;
     }
-    
+
 
     counter++
     if (counter < questions.length) {
 
-        // show question and image in questions container
-        $("#question").append($("<p>").text(questions[counter].question));
-        var newImg = $("<img>").addClass("img p-1 m-2");
-        newImg.attr("src",questions[counter].imgUrl);
-        $("#question").append(newImg);
+        // show question and image wraped in myDiv inside questions container
+
+        var newImg = $("<img>").addClass("img p-1 m-2 img-thumbnail");
+        newImg.attr("src", questions[counter].imgUrl);
+        var newDiv = $("<div>").addClass("d-flex justify-content-center").attr("id", "myDiv");
+        // with css and animate , new question has a Fade-in effect
+        newDiv.append($("<p>").text(questions[counter].question), newImg).css("opacity", "0").animate({ opacity: '1' }, "slow");
+        $("#question").append(newDiv);
+
 
         // generats 4 options
         $("#options").empty();
 
         for (i = 0; i < 4; i++) {
             var newButton = $("<button>").text(questions[counter].answers[i]);
-
-            newButton.addClass("btn btn-default m-1 ");
+            // newButton.attr("id","")
+            newButton.addClass("btn btn-default m-1 optButton");
             $("#options").append(newButton)
         }
 
+
         // on options click we check the answer and recall new question
         $(".btn").click(function () {
-            // var userAnswer =
-                checkAnswer($(this).text(), questions[counter].correct_answer);
-               
-            nextQuestion();
+
         })
 
     }
@@ -203,20 +209,62 @@ function nextQuestion() {
         showResult();
     }
 }
+$(document).on("click", ".optButton", function (event) {
+    // disable buttons after click
+    $(".optButton").attr("disabled", true);
+    // stop the clock
+    if (clockRunning) {
+        clearInterval(interval);
 
+    }
+    clockRunning = false;
+    time = 5
+
+    // checkAnswer will return True or False
+    if (checkAnswer($(this).text(), questions[counter].correct_answer)) {
+        // tell user the answer was correct
+        $("#question").empty();
+
+        //  correct answer for 2 seconds
+        var newP = $("<p>").text("well done!! the correct answer was : "+questions[counter].correct_answer);
+        newP.css("color", "green");
+        
+        $("#question").prepend(newP);
+
+
+        setTimeout(function () { nextQuestion() }, 2000);
+    } else {
+        // tell user the answer was NOT correct
+        $("#question").empty();
+
+
+        //  correct answer for 2 seconds
+        var newP = $("<p>").text("Sorry , Wrong answer!! the correct answer was : " + (questions[counter].correct_answer));
+        newP.css("color", "red");
+     
+        $("#question").prepend(newP);
+
+
+        setTimeout(function () { nextQuestion() }, 2000);
+    };
+
+    // nextQuestion();
+
+
+});
 
 // shows overall result , resets all variables and html , stop the timer
 function showResult() {
     $("#questions").empty();
 
-    $("#question").append("<h1 id=\"result\">your result is : " + (correctAnswers * 10) + "%  And  your overall time was: " + (timeConverter(overalTime)) +"</h1>");
-     
+    $("#question").append("<h1 id=\"result\">your result is : " + (correctAnswers * 10) + "%  And  your overall time was: " + (timeConverter(overalTime)) + "</h1>");
+
 
     $("#options").empty();
     counter = -1;
     correctAnswers = 0;
     wrongAnswers = 0;
-    overalTime=0;
+    overalTime = 0;
     $("#correctAnswersCounter").text("Correct Answers : ");
     $("#correctAnswers").empty();
     $("#wrongAnswersCounter").text("wrong Answers : ");
@@ -246,9 +294,9 @@ function start() {
     $("#options").empty();
     $("#questions").empty();
     console.log("start empty");
-    $("#question").append($("<p>").text("Do you always know where you are when it comes to geography trivia? \t If you think you do, then test your knowledge now with these free geography trivia questions and answers...?")) ;
+    $("#question").append($("<p>").text("Do you always know where you are when it comes to geography trivia? \t If you think you do, then test your knowledge now with these free geography trivia questions and answers...?"));
     var newImg = $("<img>").addClass("img p-1 m-2");
-    newImg.attr("src","assets\\images\\ng.jpg");
+    newImg.attr("src", "assets\\images\\ng.jpg");
     $("#question").append(newImg);
     $("#options").text("");
     var newButton = $("<button>").text("Start");
@@ -267,22 +315,22 @@ function start() {
 // timer function ,count down , and keeps the overal time spent
 function count() {
 
-    
+
     time--;
-overalTime++;
-    
+    overalTime++;
+
     var converted = timeConverter(time);
 
     // if we ran out of time 
     if (time == 0) {
-        
+
         //  we compare apple to oranges , result is a wrong answer
         checkAnswer("apple", "oranges");
         $("#options").empty();
-        
+
         if (clockRunning) {
             clearInterval(interval);
-    
+
         }
         clockRunning = false;
         time = 5;
@@ -291,12 +339,12 @@ overalTime++;
         $(".img").remove();
 
         // let user know that times up and correct answer for 2 seconds
-        var newP =$("<p>").text("times up!! the correct answer was : "+questions[counter].correct_answer);
+        var newP = $("<p>").text("times up!! the correct answer was : " + questions[counter].correct_answer);
         newP.css("color", "red");
         $("#question").prepend(newP);
 
-        
-        setTimeout(function(){ nextQuestion()}, 2000);
+
+        setTimeout(function () { nextQuestion() }, 2000);
 
     }
     // show timer on screen
@@ -324,6 +372,6 @@ function timeConverter(t) {
 }
 
 
-$(document).ready(function(){
+$(document).ready(function () {
     start();
-  });
+});
